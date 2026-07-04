@@ -157,18 +157,10 @@ Eric`;
     }
   }
 
-  // Animated typing effect.
+  // Message reveal without layout shifting.
   function startTypingEffect() {
-    let index = 0;
-    typedMessageEl.textContent = "";
-
-    const typingInterval = setInterval(() => {
-      typedMessageEl.textContent += messageText[index];
-      index += 1;
-      if (index >= messageText.length) {
-        clearInterval(typingInterval);
-      }
-    }, 18);
+    if (!typedMessageEl) return;
+    typedMessageEl.textContent = messageText;
   }
 
   // Countdown to the moment you met six months ago.

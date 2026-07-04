@@ -348,6 +348,7 @@ h1 {
   line-height: 1.7;
   white-space: pre-wrap;
   color: var(--text);
+  overflow-anchor: none;
 }
 
 .typing-area::after {

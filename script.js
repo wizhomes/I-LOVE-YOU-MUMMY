@@ -180,6 +180,7 @@ Eric`;
     const startDate = storedStart ? new Date(Number(storedStart)) : new Date();
 
     if (!storedStart) {
+      startDate.setMonth(startDate.getMonth() - 6);
       window.localStorage.setItem(storageKey, String(startDate.getTime()));
     }
 

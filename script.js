@@ -163,7 +163,7 @@ Eric`;
     typedMessageEl.textContent = messageText;
   }
 
-  // Countdown to the moment you met six months ago.
+  // Countdown to the day you met.
   function startCountdown() {
     if (!countdownEl) return;
 
@@ -171,41 +171,19 @@ Eric`;
 
     const updateCountdown = () => {
       const now = new Date();
-      const dayMs = 1000 * 60 * 60 * 24;
-      const hourMs = 1000 * 60 * 60;
-      const minuteMs = 1000 * 60;
+      const elapsedMs = Math.max(0, now.getTime() - startDate.getTime());
 
-      const totalMonths = (now.getUTCFullYear() - startDate.getUTCFullYear()) * 12 + (now.getUTCMonth() - startDate.getUTCMonth());
-      const years = Math.max(0, Math.floor(totalMonths / 12));
-      const months = Math.max(0, totalMonths - years * 12);
-
-      const anniversaryDate = new Date(
-        Date.UTC(
-          startDate.getUTCFullYear(),
-          startDate.getUTCMonth() + totalMonths,
-          startDate.getUTCDate(),
-          startDate.getUTCHours(),
-          startDate.getUTCMinutes(),
-          startDate.getUTCSeconds(),
-          startDate.getUTCMilliseconds()
-        )
-      );
-
-      let days = 0;
-      let remainderMs = Math.max(0, now.getTime() - anniversaryDate.getTime());
-
-      if (remainderMs > 0) {
-        days = Math.floor(remainderMs / dayMs);
-        remainderMs -= days * dayMs;
-      }
-
-      const hours = Math.floor(remainderMs / hourMs);
-      remainderMs -= hours * hourMs;
-
-      const minutes = Math.floor(remainderMs / minuteMs);
-      remainderMs -= minutes * minuteMs;
-
-      const seconds = Math.floor(remainderMs / 1000);
+      const totalSeconds = Math.floor(elapsedMs / 1000);
+      const years = Math.floor(totalSeconds / (365 * 24 * 60 * 60));
+      const remainingAfterYears = totalSeconds % (365 * 24 * 60 * 60);
+      const months = Math.floor(remainingAfterYears / (30 * 24 * 60 * 60));
+      const remainingAfterMonths = remainingAfterYears % (30 * 24 * 60 * 60);
+      const days = Math.floor(remainingAfterMonths / (24 * 60 * 60));
+      const remainingAfterDays = remainingAfterMonths % (24 * 60 * 60);
+      const hours = Math.floor(remainingAfterDays / (60 * 60));
+      const remainingAfterHours = remainingAfterDays % (60 * 60);
+      const minutes = Math.floor(remainingAfterHours / 60);
+      const seconds = remainingAfterHours % 60;
 
       countdownEl.innerHTML = `
         <div class="countdown-item"><strong>${years}</strong><span>Years</span></div>

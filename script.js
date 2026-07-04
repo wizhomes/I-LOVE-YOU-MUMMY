@@ -175,35 +175,44 @@ Eric`;
   function startCountdown() {
     if (!countdownEl) return;
 
-    const storageKey = "beautifulTimelineStart";
-    const storedStart = window.localStorage.getItem(storageKey);
-    const startDate = storedStart ? new Date(Number(storedStart)) : new Date();
-
-    if (!storedStart) {
-      startDate.setMonth(startDate.getMonth() - 6);
-      window.localStorage.setItem(storageKey, String(startDate.getTime()));
-    }
+    const startDate = new Date(Date.UTC(2026, 0, 4, 0, 0, 0));
 
     const updateCountdown = () => {
       const now = new Date();
-      let diff = Math.max(0, now - startDate);
+      const dayMs = 1000 * 60 * 60 * 24;
+      const hourMs = 1000 * 60 * 60;
+      const minuteMs = 1000 * 60;
 
-      const years = Math.floor(diff / (1000 * 60 * 60 * 24 * 365.25));
-      diff -= years * (1000 * 60 * 60 * 24 * 365.25);
+      const totalMonths = (now.getUTCFullYear() - startDate.getUTCFullYear()) * 12 + (now.getUTCMonth() - startDate.getUTCMonth());
+      const months = Math.max(0, totalMonths);
 
-      const months = Math.floor(diff / (1000 * 60 * 60 * 24 * 30.44));
-      diff -= months * (1000 * 60 * 60 * 24 * 30.44);
+      const anniversaryDate = new Date(
+        Date.UTC(
+          startDate.getUTCFullYear(),
+          startDate.getUTCMonth() + months,
+          startDate.getUTCDate(),
+          startDate.getUTCHours(),
+          startDate.getUTCMinutes(),
+          startDate.getUTCSeconds(),
+          startDate.getUTCMilliseconds()
+        )
+      );
 
-      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-      diff -= days * (1000 * 60 * 60 * 24);
+      let days = 0;
+      let remainderMs = Math.max(0, now.getTime() - anniversaryDate.getTime());
 
-      const hours = Math.floor(diff / (1000 * 60 * 60));
-      diff -= hours * (1000 * 60 * 60);
+      if (remainderMs > 0) {
+        days = Math.floor(remainderMs / dayMs);
+        remainderMs -= days * dayMs;
+      }
 
-      const minutes = Math.floor(diff / (1000 * 60));
-      diff -= minutes * (1000 * 60);
+      const hours = Math.floor(remainderMs / hourMs);
+      remainderMs -= hours * hourMs;
 
-      const seconds = Math.floor(diff / 1000);
+      const minutes = Math.floor(remainderMs / minuteMs);
+      remainderMs -= minutes * minuteMs;
+
+      const seconds = Math.floor(remainderMs / 1000);
 
       countdownEl.innerHTML = `
         <div class="countdown-item"><strong>${years}</strong><span>Years</span></div>

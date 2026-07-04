@@ -184,12 +184,13 @@ Eric`;
       const minuteMs = 1000 * 60;
 
       const totalMonths = (now.getUTCFullYear() - startDate.getUTCFullYear()) * 12 + (now.getUTCMonth() - startDate.getUTCMonth());
-      const months = Math.max(0, totalMonths);
+      const years = Math.max(0, Math.floor(totalMonths / 12));
+      const months = Math.max(0, totalMonths - years * 12);
 
       const anniversaryDate = new Date(
         Date.UTC(
           startDate.getUTCFullYear(),
-          startDate.getUTCMonth() + months,
+          startDate.getUTCMonth() + totalMonths,
           startDate.getUTCDate(),
           startDate.getUTCHours(),
           startDate.getUTCMinutes(),

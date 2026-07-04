@@ -173,18 +173,36 @@ Eric`;
 
   // Countdown to the moment you met six months ago.
   function startCountdown() {
-    const startDate = new Date();
-    startDate.setMonth(startDate.getMonth() - 6);
+    if (!countdownEl) return;
+
+    const storageKey = "beautifulTimelineStart";
+    const storedStart = window.localStorage.getItem(storageKey);
+    const startDate = storedStart ? new Date(Number(storedStart)) : new Date();
+
+    if (!storedStart) {
+      window.localStorage.setItem(storageKey, String(startDate.getTime()));
+    }
 
     const updateCountdown = () => {
       const now = new Date();
-      const diff = now - startDate;
+      let diff = Math.max(0, now - startDate);
+
       const years = Math.floor(diff / (1000 * 60 * 60 * 24 * 365.25));
-      const months = Math.floor((diff % (1000 * 60 * 60 * 24 * 365.25)) / (1000 * 60 * 60 * 24 * 30.44));
-      const days = Math.floor((diff % (1000 * 60 * 60 * 24 * 30.44)) / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-      const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+      diff -= years * (1000 * 60 * 60 * 24 * 365.25);
+
+      const months = Math.floor(diff / (1000 * 60 * 60 * 24 * 30.44));
+      diff -= months * (1000 * 60 * 60 * 24 * 30.44);
+
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      diff -= days * (1000 * 60 * 60 * 24);
+
+      const hours = Math.floor(diff / (1000 * 60 * 60));
+      diff -= hours * (1000 * 60 * 60);
+
+      const minutes = Math.floor(diff / (1000 * 60));
+      diff -= minutes * (1000 * 60);
+
+      const seconds = Math.floor(diff / 1000);
 
       countdownEl.innerHTML = `
         <div class="countdown-item"><strong>${years}</strong><span>Years</span></div>
@@ -197,7 +215,15 @@ Eric`;
     };
 
     updateCountdown();
-    setInterval(updateCountdown, 1000);
+    const countdownTimer = window.setInterval(updateCountdown, 1000);
+
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "visible") {
+        updateCountdown();
+      }
+    });
+
+    return countdownTimer;
   }
 
   // Interactive heart button.

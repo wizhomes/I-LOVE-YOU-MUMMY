@@ -175,7 +175,7 @@ Eric`;
   function startCountdown() {
     if (!countdownEl) return;
 
-    const startDate = new Date(Date.UTC(2026, 0, 4, 0, 0, 0));
+    const startDate = new Date(Date.UTC(2026, 0, 10, 0, 0, 0));
 
     const updateCountdown = () => {
       const now = new Date();
